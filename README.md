@@ -1,5 +1,9 @@
 # PyMailIO
 
+An Asynchronous mail server.
+
+Work in progress... please call back soon!
+
 
 ## Built With
 
