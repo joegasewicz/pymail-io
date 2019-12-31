@@ -11,6 +11,7 @@ pip install pymail-io
 ## Mission Statement
 A mail server that you can run beside a Python WSGI application with the main
 objectives:
+
     - Ease of use - an excellent public API for Python developers
     - Fire & forget - no need to remember which tasks on which routes are waiting to be handled
     - Simple API, you won't need to learn huge task runners libraries just to send an email
