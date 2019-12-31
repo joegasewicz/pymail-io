@@ -1,4 +1,4 @@
-# PyMailIO
+# PyMail IO
 
 An Asynchronous mail server.
 
