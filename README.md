@@ -1,4 +1,4 @@
-![PyMail IO](media/pymail_logo.png?raw=true "Title")
+![PyMail IO](assets/pymail_logo.png?raw=true "Title")
 
 An Asynchronous mail server.
 
