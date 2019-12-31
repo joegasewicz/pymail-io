@@ -4,6 +4,10 @@ An Asynchronous mail server.
 
 Work in progress... please call back soon!
 
+```bash
+pip install pymail-io
+```
+
 
 ## Built With
 
