@@ -1,6 +1,8 @@
-![PyMail IO](assets/pymail_logo.png?raw=true "Title")
+![](assets/pymail_logo.png =250x)
 
-An Asynchronous mail server.
+ An Asynchronous mail server.
+
+
 
 Work in progress... please call back soon!
 
