@@ -1,4 +1,4 @@
-![](assets/pymail_logo.png =250x)
+![](assets/pymail_logo.png)
 
  An Asynchronous mail server.
 
