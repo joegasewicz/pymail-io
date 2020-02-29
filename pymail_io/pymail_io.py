@@ -62,6 +62,19 @@ class _PyMailIO:
         self.send_email_sync(msg)
 
 
+    def add_email_to_task_queue(self, subject: str, body: str):
+        pytask = PyTaskIO(
+            store_port=8080,
+            store_host="localhost",
+            db=0,
+            workers=1,
+        )
+
+        pytask.run()
+        meta_data = pytask.add_task(self.create_and_send_email, subject, body)
+        return meta_data
+
+
 class PyMailIO(AbstractPyMailIO, _PyMailIO):
 
     def __init__(self, *args, **kwargs):
@@ -92,5 +105,14 @@ class PymailIOAsync(AbstractPyMailIO, _PyMailIO):
 
 class PyMailIOAsTask(AbstractPyMailIO, _PyMailIO):
 
-    def send_email(self) -> Dict[str, Any]:
-        pass
+    def send_email(self, *, subject, body) -> Dict[str, Dict]:
+        """
+        :param subject:
+        :param body:
+        :return:
+        """
+        metadata = self.add_email_to_task_queue(subject, body)
+        return {
+            "response": metadata,
+        }
+
