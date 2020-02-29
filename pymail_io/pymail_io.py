@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 import smtplib
-import ssl
+import ssl, contextlib
 from email.message import EmailMessage
 from typing import Dict, Any
 from pytask_io import PyTaskIO
@@ -31,11 +31,8 @@ Subject: Hi Joe!!!
 Test message #1 ...
 """
 
-context = ssl.create_default_context()
 
-with smtplib.SMTP_SSL("smtp.gmail.com", SMPT_SSL_PORT, context=context) as server:
-    server.login(sender_email, password)
-    server.sendmail(sender_email, receiver_email, message)
+
 
 
 class AbstractPyMailIO(ABC):
@@ -54,6 +51,9 @@ class _PyMailIO:
     store_host: str
     db: int
     workers: int
+    host: str
+
+    _context: ssl.SSLContext
 
     def __init__(self, *args, **kwargs):
         self.password = kwargs.get("password")
@@ -63,6 +63,16 @@ class _PyMailIO:
         self.store_host = kwargs.get("store_host")
         self.db = kwargs.get("db")
         self.workers = kwargs.get("workers")
+        self.host = kwargs.get("host") or "smtp.gmail.com"
+        self.init()
+
+    def init(self):
+        self._context = ssl.create_default_context()
+
+    def send_email_sync(self, email_msg: str):
+        with smtplib.SMTP_SSL(self.host, SMPT_SSL_PORT, context=self._context) as server:
+            server.login(self.sender_email, self.password)
+            server.sendmail(self.sender_email, self.receiver_email, email_msg)
 
 
 class PyMailIO(AbstractPyMailIO, _PyMailIO):
