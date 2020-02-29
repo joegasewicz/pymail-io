@@ -6,8 +6,8 @@ from email.message import EmailMessage
 email_msg = EmailMessage()
 
 email_msg["Subject"] = "test here"
-email_msg["From"] = "joegoosebass@gmail.com"
-email_msg["To"] = "joegoosebass@gmail.com"
+email_msg["From"] = "pymailio@gmail.com"
+email_msg["To"] = "pymailio@gmail.com"
 
 s = smtplib.SMTP("localhost")
 s.send_message(email_msg)
