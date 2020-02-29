@@ -1,10 +1,11 @@
 from abc import ABC, abstractmethod
 import smtplib
-import ssl, contextlib
+import ssl
 from email.message import EmailMessage
 from typing import Dict, Any
 from pytask_io import PyTaskIO
 import asyncio
+import time
 
 
 class AbstractPyMailIO(ABC):
@@ -24,8 +25,8 @@ class _PyMailIO:
     db: int
     workers: int
     host: str
+    pytask: PyTaskIO = None
 
-    _CONTEXT: ssl.SSLContext
     _SMPT_SSL_PORT = 465
     _START_TLS_PORT = 587
 
@@ -38,18 +39,18 @@ class _PyMailIO:
         self.db = kwargs.get("db")
         self.workers = kwargs.get("workers")
         self.host = kwargs.get("host") or "smtp.gmail.com"
-        self.init()
 
     def init(self):
-        self._CONTEXT = ssl.create_default_context()
+        if self.pytask:
+            self.pytask.run()
 
     def send_email_sync(self, email_msg: str):
-        with smtplib.SMTP_SSL(self.host, self._SMPT_SSL_PORT, context=self._CONTEXT) as server:
-            server.login(self.sender_email, self.password)
-            server.sendmail(self.sender_email, self.receiver_email, email_msg)
+        server = smtplib.SMTP_SSL(self.host, self._SMPT_SSL_PORT)
+        server.login(self.sender_email, self.password)
+        server.sendmail(self.sender_email, self.receiver_email, email_msg)
+        server.quit()
 
-    @staticmethod
-    def _format_msg(subject: str, body: str) -> str:
+    def _format_msg(self, subject: str, body: str) -> str:
         formatted_text = f"""\
                 Subject: {subject}
 
@@ -58,20 +59,12 @@ class _PyMailIO:
         return formatted_text
 
     def create_and_send_email(self, subject: str, body: str) -> Any:
-        msg = _PyMailIO._format_msg(subject, body)
+        msg = self._format_msg(subject, body)
         self.send_email_sync(msg)
 
+    def add_email_to_task_queue(self, subject: str, body: str) -> Dict[str, Dict]:
 
-    def add_email_to_task_queue(self, subject: str, body: str):
-        pytask = PyTaskIO(
-            store_port=8080,
-            store_host="localhost",
-            db=0,
-            workers=1,
-        )
-
-        pytask.run()
-        meta_data = pytask.add_task(self.create_and_send_email, subject, body)
+        meta_data = self.pytask.add_task(self.create_and_send_email, subject, body)
         return meta_data
 
 
@@ -79,6 +72,7 @@ class PyMailIO(AbstractPyMailIO, _PyMailIO):
 
     def __init__(self, *args, **kwargs):
         super(PyMailIO, self).__init__(self, *args, **kwargs)
+        self.init()
 
     def send_email(self, *, subject, body) -> Dict[str, None]:
         """
@@ -104,6 +98,16 @@ class PymailIOAsync(AbstractPyMailIO, _PyMailIO):
 
 
 class PyMailIOAsTask(AbstractPyMailIO, _PyMailIO):
+
+    def __init__(self, *args, **kwargs):
+        super(PyMailIOAsTask, self).__init__(self, *args, **kwargs)
+        self.pytask = PyTaskIO(
+            store_port=6379,
+            store_host="localhost",
+            db=0,
+            workers=1,
+        )
+        self.init()
 
     def send_email(self, *, subject, body) -> Dict[str, Dict]:
         """
