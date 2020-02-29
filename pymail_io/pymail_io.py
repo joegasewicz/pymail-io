@@ -9,36 +9,11 @@ import asyncio
 # TODO This gets removed when the library is ready to be used
 from env import PASSWORD, SENDER_EMAIL, RECEIVER_EMAIL
 
-#
-# email_msg = EmailMessage()
-#
-# email_msg["Subject"] = "test here"
-# email_msg["From"] = "pymailio@gmail.com"
-# email_msg["To"] = "pymailio@gmail.com"
-#
-# s = smtplib.SMTP("localhost")
-# s.send_message(email_msg)
-# s.quit()
-
-SMPT_SSL_PORT = 465
-START_TLS_PORT = 587
-
-SMTP_SERVER = "smtp.gmail.com"
-
-message = """\
-Subject: Hi Joe!!!
-
-Test message #1 ...
-"""
-
-
-
-
 
 class AbstractPyMailIO(ABC):
 
     @abstractmethod
-    def send_email(self) -> Dict[str, Any]:
+    def send_email(self, *, subject, body) -> Dict[str, Any]:
         pass
 
 
@@ -53,7 +28,9 @@ class _PyMailIO:
     workers: int
     host: str
 
-    _context: ssl.SSLContext
+    _CONTEXT: ssl.SSLContext
+    _SMPT_SSL_PORT = 465
+    _START_TLS_PORT = 587
 
     def __init__(self, *args, **kwargs):
         self.password = kwargs.get("password")
@@ -67,12 +44,25 @@ class _PyMailIO:
         self.init()
 
     def init(self):
-        self._context = ssl.create_default_context()
+        self._CONTEXT = ssl.create_default_context()
 
     def send_email_sync(self, email_msg: str):
-        with smtplib.SMTP_SSL(self.host, SMPT_SSL_PORT, context=self._context) as server:
+        with smtplib.SMTP_SSL(self.host, self._SMPT_SSL_PORT, context=self._CONTEXT) as server:
             server.login(self.sender_email, self.password)
             server.sendmail(self.sender_email, self.receiver_email, email_msg)
+
+    @staticmethod
+    def _format_msg(subject: str, body: str) -> str:
+        formatted_text = f"""\
+                Subject: {subject}
+
+                {body}
+                """
+        return formatted_text
+
+    def create_and_send_email(self, subject: str, body: str) -> Any:
+        msg = _PyMailIO._format_msg(subject, body)
+        self.send_email_sync(msg)
 
 
 class PyMailIO(AbstractPyMailIO, _PyMailIO):
@@ -80,8 +70,11 @@ class PyMailIO(AbstractPyMailIO, _PyMailIO):
     def __init__(self, *args, **kwargs):
         super(PyMailIO, self).__init__(self, *args, **kwargs)
 
-    def send_email(self) -> Dict[str, Any]:
-        pass
+    def send_email(self, *, subject, body) -> Dict[str, Any]:
+        self.create_and_send_email(subject, body)
+        return {
+            "data": "metadata will be here..."
+        }
 
 
 class PymailIOAsync(AbstractPyMailIO, _PyMailIO):
@@ -107,4 +100,8 @@ if __name__ == "__main__":
         sender_email=SENDER_EMAIL,
         receiver_email=RECEIVER_EMAIL,
     )
-    pymail_io.send_email()
+
+    pymail_io.send_email(
+        subject="Hello From PyMailIO #1",
+        body="This is the body text #1",
+    )
