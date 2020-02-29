@@ -50,11 +50,19 @@ class _PyMailIO:
     password: str
     receiver_email: str
     sender_email: str
+    store_port: int
+    store_host: str
+    db: int
+    workers: int
 
     def __init__(self, *args, **kwargs):
         self.password = kwargs.get("password")
         self.receiver_email = kwargs.get("receiver_email")
         self.sender_email = kwargs.get("sender_email")
+        self.store_port = kwargs.get("store_port")
+        self.store_host = kwargs.get("store_host")
+        self.db = kwargs.get("db")
+        self.workers = kwargs.get("workers")
 
 
 class PyMailIO(AbstractPyMailIO, _PyMailIO):
