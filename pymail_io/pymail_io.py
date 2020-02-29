@@ -1,11 +1,11 @@
 from abc import ABC, abstractmethod
 import smtplib
 import ssl
+
 from email.message import EmailMessage
 from typing import Dict, Any
 from pytask_io import PyTaskIO
 import asyncio
-import time
 
 
 class AbstractPyMailIO(ABC):
@@ -27,8 +27,11 @@ class _PyMailIO:
     host: str
     pytask: PyTaskIO = None
 
+    _CONTEXT: ssl.SSLContext
     _SMPT_SSL_PORT = 465
     _START_TLS_PORT = 587
+
+    _SSL_CONTEXT = ssl.create_default_context()
 
     def __init__(self, *args, **kwargs):
         self.password = kwargs.get("password")
@@ -46,9 +49,16 @@ class _PyMailIO:
 
     def send_email_sync(self, email_msg: str):
         server = smtplib.SMTP_SSL(self.host, self._SMPT_SSL_PORT)
-        server.login(self.sender_email, self.password)
-        server.sendmail(self.sender_email, self.receiver_email, email_msg)
+        try:
+            server.login(self.sender_email, self.password)
+            server.sendmail(self.sender_email, self.receiver_email, email_msg)
+        except smtplib.SMTPAuthenticationError as err:
+            Warning(
+                "PyMailIO Error: Couldn't authenticate email senders credentials"
+            )
+
         server.quit()
+
 
     def _format_msg(self, subject: str, body: str) -> str:
         formatted_text = f"""\
@@ -95,28 +105,4 @@ class PymailIOAsync(AbstractPyMailIO, _PyMailIO):
         """
         result = await asyncio.sleep(1)
         return {}
-
-
-class PyMailIOAsTask(AbstractPyMailIO, _PyMailIO):
-
-    def __init__(self, *args, **kwargs):
-        super(PyMailIOAsTask, self).__init__(self, *args, **kwargs)
-        self.pytask = PyTaskIO(
-            store_port=6379,
-            store_host="localhost",
-            db=0,
-            workers=1,
-        )
-        self.init()
-
-    def send_email(self, *, subject, body) -> Dict[str, Dict]:
-        """
-        :param subject:
-        :param body:
-        :return:
-        """
-        metadata = self.add_email_to_task_queue(subject, body)
-        return {
-            "response": metadata,
-        }
 
