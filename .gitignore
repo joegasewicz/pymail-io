@@ -125,5 +125,5 @@ dmypy.json
 .pyre/
 
 .idea/
-
+pymail_local.py
 env.py

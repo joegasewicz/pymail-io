@@ -9,6 +9,9 @@ setup(
     version="0.0.1",
     description="An asynchronous mail server",
     packages=['pymail_io'],
+    install_requires=[
+        "pytask-io"
+    ],
     classifiers=[
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",

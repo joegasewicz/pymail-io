@@ -6,9 +6,6 @@ from typing import Dict, Any
 from pytask_io import PyTaskIO
 import asyncio
 
-# TODO This gets removed when the library is ready to be used
-from env import PASSWORD, SENDER_EMAIL, RECEIVER_EMAIL
-
 
 class AbstractPyMailIO(ABC):
 
@@ -70,10 +67,16 @@ class PyMailIO(AbstractPyMailIO, _PyMailIO):
     def __init__(self, *args, **kwargs):
         super(PyMailIO, self).__init__(self, *args, **kwargs)
 
-    def send_email(self, *, subject, body) -> Dict[str, Any]:
-        self.create_and_send_email(subject, body)
+    def send_email(self, *, subject, body) -> Dict[str, None]:
+        """
+        The response will always be None
+        :param subject: The email title or subject
+        :param body: The text body of the email
+        :return: The response is a Dict with a `response` key
+        """
+        res = self.create_and_send_email(subject, body)
         return {
-            "data": "metadata will be here..."
+            "response": res,
         }
 
 
@@ -91,17 +94,3 @@ class PyMailIOAsTask(AbstractPyMailIO, _PyMailIO):
 
     def send_email(self) -> Dict[str, Any]:
         pass
-
-
-if __name__ == "__main__":
-
-    pymail_io = PyMailIO(
-        password=PASSWORD,
-        sender_email=SENDER_EMAIL,
-        receiver_email=RECEIVER_EMAIL,
-    )
-
-    pymail_io.send_email(
-        subject="Hello From PyMailIO #1",
-        body="This is the body text #1",
-    )
