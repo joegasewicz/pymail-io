@@ -2,6 +2,7 @@ import pytest
 import smtplib
 
 from pymail_io.pymail_io import PyMailIO
+from pymail_io.pymailio_as_task import PyMailIOAsTask
 
 
 class MockServer:
@@ -36,7 +37,7 @@ class TestPyMailIO:
         assert "This is a test message." in result
 
     def test_add_email_to_task_queue(self, monkeypatch):
-        p = PyMailIO(
+        p = PyMailIOAsTask(
             sender_email="test_sender",
             receiver_email="receiver_email",
             password="test_password",
