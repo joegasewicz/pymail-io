@@ -1,10 +1,10 @@
 from typing import Dict
 
-from pymail_io.pymail_io import AbstractPyMailIO, _PyMailIO, PyTaskIO
+from pymail_io.pymail_io import AbstractPyMailIO, PyMailIO, PyTaskIO
 import time
 
 
-class PyMailIOAsTask(AbstractPyMailIO, _PyMailIO):
+class PyMailIOAsTask(AbstractPyMailIO, PyMailIO):
 
     def __init__(self, *args, **kwargs):
         super(PyMailIOAsTask, self).__init__(self, *args, **kwargs)

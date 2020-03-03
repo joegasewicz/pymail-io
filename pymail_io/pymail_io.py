@@ -13,7 +13,7 @@ class AbstractPyMailIO(ABC):
         pass
 
 
-class _PyMailIO:
+class PyMailIO:
 
     password: str
     receiver_email: str
@@ -56,7 +56,7 @@ class _PyMailIO:
             server.quit()
         return inner
 
-    def _format_msg(self, subject: str, body: str) -> str:
+    def format_msg(self, subject: str, body: str) -> str:
         formatted_text = f"""\
                 Subject: {subject}
 
@@ -65,7 +65,7 @@ class _PyMailIO:
         return formatted_text
 
     def create_and_send_email(self, subject: str, body: str) -> Any:
-        msg = self._format_msg(subject, body)
+        msg = self.format_msg(subject, body)
         self.send_email_sync(msg)
 
     def add_email_to_task_queue(self, subject: str, body: str) -> Dict[str, Dict]:
@@ -83,7 +83,6 @@ class _PyMailIO:
                     """
             return formatted_text
 
-
         email_msg = _format_msg(subject, body)
 
         def inner():
@@ -98,15 +97,14 @@ class _PyMailIO:
             server.quit()
             return "IT WORKS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 
-
         meta_data = self.pytask.add_task(inner, subject, body)
         return meta_data
 
 
-class PyMailIO(AbstractPyMailIO, _PyMailIO):
+class PyMailSyncIO(AbstractPyMailIO, PyMailIO):
 
     def __init__(self, *args, **kwargs):
-        super(PyMailIO, self).__init__(self, *args, **kwargs)
+        super(PyMailSyncIO, self).__init__(self, *args, **kwargs)
         self.init()
 
     def send_email(self, *, subject, body) -> Dict[str, None]:
@@ -120,7 +118,7 @@ class PyMailIO(AbstractPyMailIO, _PyMailIO):
         return res
 
 
-class PymailIOAsync(AbstractPyMailIO, _PyMailIO):
+class PymailIOAsync(AbstractPyMailIO, PyMailIO):
 
     async def send_email(self) -> Dict[str, Any]:
         """
