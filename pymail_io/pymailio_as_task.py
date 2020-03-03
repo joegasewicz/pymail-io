@@ -1,6 +1,7 @@
 from typing import Dict
 
 from pymail_io.pymail_io import AbstractPyMailIO, _PyMailIO, PyTaskIO
+import time
 
 
 class PyMailIOAsTask(AbstractPyMailIO, _PyMailIO):
@@ -22,7 +23,10 @@ class PyMailIOAsTask(AbstractPyMailIO, _PyMailIO):
         :return:
         """
         metadata = self.add_email_to_task_queue(subject, body)
-        return {
-            "response": metadata,
-        }
+
+        return metadata
+
+    def get_task(self, metadata):
+        return self.pytask.get_task(metadata)
+
 
