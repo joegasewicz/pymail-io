@@ -5,6 +5,8 @@ import ssl
 from typing import Dict, Any
 from pytask_io import PyTaskIO
 import asyncio
+import time
+import threading
 
 
 class AbstractPyMailIO(ABC):
@@ -25,6 +27,11 @@ class PyMailIO:
     workers: int
     host: str
     pytask: PyTaskIO = None
+    server: bool
+    background_thread: threading.Thread
+    foreground_thread: threading.Thread
+    kill: bool
+
 
     _SMPT_SSL_PORT = 465
     _START_TLS_PORT = 587
@@ -38,9 +45,33 @@ class PyMailIO:
         self.db = kwargs.get("db")
         self.workers = kwargs.get("workers")
         self.host = kwargs.get("host") or "smtp.gmail.com"
+        self.server = kwargs.get("server") or False
+        self.kill = False
+        self.init()
 
     def init(self):
+        if self.server:
+            self.background_thread = threading.Thread(name="bg_thread", target=self.run_background_thread)
+            self.foreground_thread = threading.Thread(name="fg_thread", target=self.run_foreground_thread)
+            self.background_thread.start()
+            self.foreground_thread.start()
+
+    def run_background_thread(self):
+        not_kill = not self.kill
+        while not_kill:
+            print("loop -----> ", threading.current_thread().__class__.__name__ == '_MainThread')
+            time.sleep(1)
+        self.background_thread.join()
+
+    def run_foreground_thread(self):
+        self.pytask = PyTaskIO(
+            store_port=6379,
+            store_host="localhost",
+            db=0,
+            workers=3,
+        )
         if self.pytask:
+            print("hereeeeee -----> ", threading.current_thread().__class__.__name__ == '_MainThread')
             self.pytask.run()
 
     def send_email_sync(self, email_msg: str):
@@ -75,7 +106,7 @@ class PyMailIO:
         receiver_email = self.receiver_email
         host = self.host
         _SMPT_SSL_PORT = self._SMPT_SSL_PORT
-
+        run_as_server = self.server
         def _format_msg(subject: str, body: str) -> str:
             formatted_text = f"""\
                     Subject: {subject}
@@ -97,7 +128,8 @@ class PyMailIO:
                         "PyMailIO Error: Couldn't authenticate email senders credentials"
                     )
                 finally:
-                    server.quit()
+                    if not run_as_server:
+                        server.quit()
             return {
                 "sent_email": {
                     "subject": subject,
