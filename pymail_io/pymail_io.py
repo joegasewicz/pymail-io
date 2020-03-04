@@ -85,7 +85,7 @@ class PyMailIO:
 
         email_msg = _format_msg(subject, body)
 
-        def inner():
+        def inner(subject: str, body: str):
             server = smtplib.SMTP_SSL(host, _SMPT_SSL_PORT)
             try:
                 server.login(sender_email, password)
@@ -94,8 +94,8 @@ class PyMailIO:
                 Warning(
                     "PyMailIO Error: Couldn't authenticate email senders credentials"
                 )
-            server.quit()
-            return "IT WORKS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+                server.quit()
+            return "Email sent_____"
 
         meta_data = self.pytask.add_task(inner, subject, body)
         return meta_data
