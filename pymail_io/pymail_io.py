@@ -86,7 +86,6 @@ class PyMailIO:
 
         email_msg = _format_msg(subject, body)
 
-
         def inner(subject: str, body: str):
             _SSL_CONTEXT = ssl.create_default_context()
             with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=ssl.SSLContext()) as server:
