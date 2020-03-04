@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import smtplib
+import ssl
 
 from typing import Dict, Any
 from pytask_io import PyTaskIO
@@ -85,17 +86,26 @@ class PyMailIO:
 
         email_msg = _format_msg(subject, body)
 
+
         def inner(subject: str, body: str):
-            server = smtplib.SMTP_SSL(host, _SMPT_SSL_PORT)
-            try:
-                server.login(sender_email, password)
-                server.sendmail(sender_email, receiver_email, email_msg)
-            except smtplib.SMTPAuthenticationError as err:
-                Warning(
-                    "PyMailIO Error: Couldn't authenticate email senders credentials"
-                )
-                server.quit()
-            return "Email sent_____"
+            _SSL_CONTEXT = ssl.create_default_context()
+            with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=ssl.SSLContext()) as server:
+                try:
+                    server.login(sender_email, password)
+                    server.sendmail(sender_email, receiver_email, email_msg)
+                except smtplib.SMTPAuthenticationError as err:
+                    Warning(
+                        "PyMailIO Error: Couldn't authenticate email senders credentials"
+                    )
+                finally:
+                    server.quit()
+            return {
+                "sent_email": {
+                    "subject": subject,
+                    "body": body,
+                }
+                # TODO date
+            }
 
         meta_data = self.pytask.add_task(inner, subject, body)
         return meta_data
@@ -126,4 +136,3 @@ class PymailIOAsync(AbstractPyMailIO, PyMailIO):
         """
         result = await asyncio.sleep(1)
         return result
-

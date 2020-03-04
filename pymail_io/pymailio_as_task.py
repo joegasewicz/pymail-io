@@ -28,5 +28,3 @@ class PyMailIOAsTask(AbstractPyMailIO, PyMailIO):
 
     def get_task(self, metadata):
         return self.pytask.get_task(metadata)
-
-
