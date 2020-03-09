@@ -4,10 +4,10 @@ import asyncio
 from pymail_io.pymail_io import AbstractPyMailIO, PyMailIO
 
 
-class PyMailSyncIO(AbstractPyMailIO, PyMailIO):
+class PyMailIOSync(AbstractPyMailIO, PyMailIO):
 
     def __init__(self, *args, **kwargs):
-        super(PyMailSyncIO, self).__init__(self, *args, **kwargs)
+        super(PyMailIOSync, self).__init__(self, *args, **kwargs)
         self.init()
 
     def send_email(self, *, subject, body) -> Dict[str, None]:
