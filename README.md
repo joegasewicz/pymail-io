@@ -37,7 +37,7 @@ email_meta = p.send_email(
 res = p.get_email_response(email_meta)
 ```
 
-Running PyMailIO as a complete emailing solution:
+Running PyMailIO as an asyncio coroutine:
 
 ```python
 from pymail_io.pymailio_async import PymailIOAsync
@@ -58,7 +58,7 @@ res = await p.get_email_response(email_meta)
 ```
 
 
-Running PyMailIO as a complete emailing solution:
+Running PyMailIO as a synchronous function (You will need to handle blocking & response):
 
 ```python
 from pymail_io.pymailio_sync import PyMailIOSync
