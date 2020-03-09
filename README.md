@@ -31,9 +31,13 @@ Running PyMailIO as a complete emailing solution:
         sender_email="your_email@gmail.com",
         host="smtp.gmail.com",
     )
-
-    res = p.send_email(subject="The subject...", body="The email body...")
-
+    # Create your email subject & body
+    email_meta = p.send_email(
+        subject="The subject...",
+        body="The email body...",
+    )
+    # Get a response from your sent email:
+    res = p.get_email_response(email_meta)
 ```
 
 ## Built With
