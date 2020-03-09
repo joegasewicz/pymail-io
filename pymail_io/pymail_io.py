@@ -46,7 +46,7 @@ class PyMailIO:
         self.store_host = kwargs.get("store_host")
         self.db = kwargs.get("db")
         self.workers = kwargs.get("workers")
-        self.host = kwargs.get("host") or "smtp.gmail.com"
+        self.host = kwargs.get("host")
         self.port = kwargs.get("port") or self._SMPT_SSL_PORT
         self.pytask = PyTaskIO(
             store_port=6379,
@@ -91,30 +91,3 @@ class PyMailIO:
 
     def send_email_on_queue(self, subject: str, body: str):
         self.email.add_email_to_task_queue(unit_of_work_callable, [subject, body])
-
-
-class PyMailSyncIO(AbstractPyMailIO, PyMailIO):
-
-    def __init__(self, *args, **kwargs):
-        super(PyMailSyncIO, self).__init__(self, *args, **kwargs)
-        self.init()
-
-    def send_email(self, *, subject, body) -> Dict[str, None]:
-        """
-        The response will always be None
-        :param subject: The email title or subject
-        :param body: The text body of the email
-        :return: The response is a Dict with a `response` key
-        """
-        res = self.create_and_send_email(subject, body)
-        return res
-
-
-class PymailIOAsync(AbstractPyMailIO, PyMailIO):
-
-    async def send_email(self) -> Dict[str, Any]:
-        """
-        :return: Return the PytaskIO metadata dict
-        """
-        result = await asyncio.sleep(1)
-        return result
