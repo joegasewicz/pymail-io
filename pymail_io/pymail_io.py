@@ -8,6 +8,9 @@ import asyncio
 import time
 import threading
 
+from pymail_io._email import Email
+from pymail_io._callables import unit_of_work_callable
+
 
 class AbstractPyMailIO(ABC):
 
@@ -27,11 +30,10 @@ class PyMailIO:
     workers: int
     host: str
     pytask: PyTaskIO = None
-    server: bool
     background_thread: threading.Thread
     foreground_thread: threading.Thread
-    kill: bool
-
+    queue: PyTaskIO
+    email: Email
 
     _SMPT_SSL_PORT = 465
     _START_TLS_PORT = 587
@@ -45,34 +47,21 @@ class PyMailIO:
         self.db = kwargs.get("db")
         self.workers = kwargs.get("workers")
         self.host = kwargs.get("host") or "smtp.gmail.com"
-        self.server = kwargs.get("server") or False
-        self.kill = False
-        self.init()
-
-    def init(self):
-        if self.server:
-            self.background_thread = threading.Thread(name="bg_thread", target=self.run_background_thread)
-            self.foreground_thread = threading.Thread(name="fg_thread", target=self.run_foreground_thread)
-            self.background_thread.start()
-            self.foreground_thread.start()
-
-    def run_background_thread(self):
-        not_kill = not self.kill
-        while not_kill:
-            print("loop -----> ", threading.current_thread().__class__.__name__ == '_MainThread')
-            time.sleep(1)
-        self.background_thread.join()
-
-    def run_foreground_thread(self):
+        self.port = kwargs.get("port") or self._SMPT_SSL_PORT
         self.pytask = PyTaskIO(
             store_port=6379,
             store_host="localhost",
             db=0,
             workers=3,
         )
-        if self.pytask:
-            print("hereeeeee -----> ", threading.current_thread().__class__.__name__ == '_MainThread')
-            self.pytask.run()
+        self.email = Email(
+            queue=self.pytask,
+            sender_email=self.sender_email,
+            password=self.password,
+            receiver_email=self.receiver_email,
+            host=self.host,
+            port=self.port,
+        )
 
     def send_email_sync(self, email_msg: str):
         def inner():
@@ -100,46 +89,8 @@ class PyMailIO:
         msg = self.format_msg(subject, body)
         self.send_email_sync(msg)
 
-    def add_email_to_task_queue(self, subject: str, body: str) -> Dict[str, Dict]:
-        sender_email = self.sender_email
-        password = self.password
-        receiver_email = self.receiver_email
-        host = self.host
-        _SMPT_SSL_PORT = self._SMPT_SSL_PORT
-        run_as_server = self.server
-        def _format_msg(subject: str, body: str) -> str:
-            formatted_text = f"""\
-                    Subject: {subject}
-
-                    {body}
-                    """
-            return formatted_text
-
-        email_msg = _format_msg(subject, body)
-
-        def inner(subject: str, body: str):
-            _SSL_CONTEXT = ssl.create_default_context()
-            with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=ssl.SSLContext()) as server:
-                try:
-                    server.login(sender_email, password)
-                    server.sendmail(sender_email, receiver_email, email_msg)
-                except smtplib.SMTPAuthenticationError as err:
-                    Warning(
-                        "PyMailIO Error: Couldn't authenticate email senders credentials"
-                    )
-                finally:
-                    if not run_as_server:
-                        server.quit()
-            return {
-                "sent_email": {
-                    "subject": subject,
-                    "body": body,
-                }
-                # TODO date
-            }
-
-        meta_data = self.pytask.add_task(inner, subject, body)
-        return meta_data
+    def send_email_on_queue(self, subject: str, body: str):
+        self.email.add_email_to_task_queue(unit_of_work_callable, [subject, body])
 
 
 class PyMailSyncIO(AbstractPyMailIO, PyMailIO):
