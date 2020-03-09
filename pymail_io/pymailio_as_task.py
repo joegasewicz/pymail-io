@@ -23,6 +23,7 @@ class PyMailIOAsTask(AbstractPyMailIO, PyMailIO):
         :return:
         """
         metadata = self.add_email_to_task_queue(subject, body)
+        self.pytask.stop()
 
         return metadata
 
