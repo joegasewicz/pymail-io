@@ -2,19 +2,13 @@ from typing import Dict
 
 from pymail_io.pymail_io import AbstractPyMailIO, PyMailIO, PyTaskIO
 import time
+import threading
 
 
 class PyMailIOAsTask(AbstractPyMailIO, PyMailIO):
 
     def __init__(self, *args, **kwargs):
         super(PyMailIOAsTask, self).__init__(self, *args, **kwargs)
-        self.pytask = PyTaskIO(
-            store_port=6379,
-            store_host="localhost",
-            db=0,
-            workers=3,
-        )
-        self.init()
 
     def send_email(self, *, subject, body) -> Dict[str, Dict]:
         """
