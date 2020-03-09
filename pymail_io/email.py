@@ -6,6 +6,7 @@ import ssl
 from pytask_io import PyTaskIO
 from typing import Dict, Tuple, Any, List, Callable
 from functools import partial
+from datetime import datetime
 
 
 def format_msg(subject: str, body: str) -> str:
@@ -23,25 +24,29 @@ def format_msg(subject: str, body: str) -> str:
 
 
 def unit_of_work_callable(
-        subject: str,
-        body: str,
         sender_email: str,
         password: str,
         receiver_email: str,
+        subject: str,
+        body: str,
+        host: str,
+        port: int,
 ) -> Dict[str, Any]:
     """
     The unit of work must be outside any context
-    :param subject:
-    :param body:
     :param sender_email:
     :param password:
     :param receiver_email:
+    :param subject:
+    :param body:
     :return:
     """
+    time_sent = None
     _SSL_CONTEXT = ssl.create_default_context()
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=ssl.SSLContext()) as server:
+    with smtplib.SMTP_SSL(host, port, context=ssl.SSLContext()) as server:
         try:
             server.login(sender_email, password)
+            time_sent = datetime.now()
             server.sendmail(sender_email, receiver_email, format_msg(subject, body))
         except smtplib.SMTPAuthenticationError as err:
             Warning(
@@ -53,6 +58,7 @@ def unit_of_work_callable(
         "sent_email": {
             "subject": subject,
             "body": body,
+            "time_sent": time_sent,
         }
     }
 
@@ -70,29 +76,44 @@ class Email:
     sender_email: str
     password: str
     receiver_email: str
+    host: str
+    port: int
 
-    def __init__(self, queue, sender_email: str, password: str, receiver_email: str):
+    def __init__(
+            self,
+            queue,
+            sender_email: str,
+            password: str,
+            receiver_email: str,
+            host: str,
+            port: int,
+    ):
         self.queue = queue
         self.sender_email = sender_email
         self.password = password
         self.receiver_email = receiver_email
+        self.host = host
+        self.port = port
 
     def add_email_to_task_queue(
             self,
-            inner: Callable,
             email_data: List[str, str],
-            host: int,
-            SMPT_SSL_PORT: int,
             unit_of_work: Callable,
     ) -> Dict[str, Any]:
         """
-        :param inner:
         :param email_data:
-        :param host:
-        :param SMPT_SSL_PORT:
         :param unit_of_work:
         :return:
         """
+        callable_uow = partial(
+            unit_of_work,
+            self.sender_email,
+            self.password,
+            self.receiver_email,
+            self.host,
+            self.port,
+        )
+
         subject, body = email_data
-        meta_data = self.queue.add_task(unit_of_work, subject, body)
+        meta_data = self.queue.add_task(callable_uow, subject, body)
         return meta_data
