@@ -25,7 +25,7 @@ class AbstractPyMailIO(ABC):
 class PyMailIO:
     """
     :kwargs:
-    :key password: Your host email password.
+    :key password: Your senders email password.
     :key receiver_email: This can be either a string or a list of email addresses.
     :key sender_email: The sender email.
     :key store_port: Redis store port (defaults to 6379).
@@ -45,6 +45,7 @@ class PyMailIO:
     #:  export PYTASKIO_DEBUG=1
     #:
     #:
+    #: The senders email password.
     password: str
 
     receiver_email: str

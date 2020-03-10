@@ -25,7 +25,7 @@ author = 'Joe Gasewicz'
 # The full version, including alpha/beta/rc tags
 release = '0.0.1'
 
-
+master_doc = 'index'
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be

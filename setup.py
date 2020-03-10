@@ -6,11 +6,11 @@ with open("README.md", "r") as fh:
 
 setup(
     name="pymail-io",
-    version="0.0.1",
+    version="0.0.2",
     description="An asynchronous mail server",
     packages=['pymail_io'],
     install_requires=[
-        "pytask-io"
+        "pytask-io",
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
