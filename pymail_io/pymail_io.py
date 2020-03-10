@@ -1,3 +1,6 @@
+"""
+PyMailIO is a low level class designed to be used be authors of libraries etc.
+"""
 from abc import ABC, abstractmethod
 import smtplib
 import ssl
@@ -20,17 +23,48 @@ class AbstractPyMailIO(ABC):
 
 
 class PyMailIO:
+    """
+    :kwargs:
+    :key password: Your host email password.
+    :key receiver_email: This can be either a string or a list of email addresses.
+    :key sender_email: The sender email.
+    :key store_port: Redis store port (defaults to 6379).
+    :key store_host: The email server host.
+    :key db: The Redis store database name.
+    :key workers: The number of workers created to run tasks in the queue.
+    :key host: The email server host.
+    :key port: The email server SSL or TLS port.
+    """
 
+    #: PyMailIO is a python library built on CPython's AsyncIO library.
+    #: The entree to asyncio is via `PyTaskIO https://github.com/joegasewicz/pytask-io` which is
+    #: an asynchronous task queue library that runs an event loop in a background thread.
+    #:
+    #: Setting up the library for debugging. Example::
+    #:
+    #:  export PYTASKIO_DEBUG=1
+    #:
+    #:
     password: str
+
     receiver_email: str
+
     sender_email: str
+
     store_port: int
+
     store_host: str
+
     db: int
+
     workers: int
+
     host: str
+
     pytask: PyTaskIO = None
+
     queue: PyTaskIO
+
     email: Email
 
     _SMPT_SSL_PORT = 465

@@ -1,6 +1,6 @@
 ![PyMailIO](assets/pymail_io.png)
 
- An Asynchronous mail server that's build on CPython's AsyncIO library.
+ An Asynchronous mail server that's built on CPython's AsyncIO library.
 
 
 ```bash
