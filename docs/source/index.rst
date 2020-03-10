@@ -11,6 +11,7 @@ Welcome to PyMail IO's documentation!
    :caption: Contents:
 
    pymail_io
+   pymailio_task
 
 
 

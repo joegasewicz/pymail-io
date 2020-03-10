@@ -3,13 +3,8 @@ PyMailIO is a low level class designed to be used be authors of libraries etc.
 """
 from abc import ABC, abstractmethod
 import smtplib
-import ssl
-
 from typing import Dict, Any
 from pytask_io import PyTaskIO
-import asyncio
-import time
-import threading
 
 from pymail_io._email import Email
 from pymail_io._callables import unit_of_work_callable
@@ -37,7 +32,7 @@ class PyMailIO:
     """
 
     #: PyMailIO is a python library built on CPython's AsyncIO library.
-    #: The entree to asyncio is via `PyTaskIO https://github.com/joegasewicz/pytask-io` which is
+    #: The entree to asyncio is via `PyTaskIO <https://github.com/joegasewicz/pytask-io>`_ which is
     #: an asynchronous task queue library that runs an event loop in a background thread.
     #:
     #: Setting up the library for debugging. Example::
@@ -54,19 +49,23 @@ class PyMailIO:
     #: The senders email address.
     sender_email: str
 
+    #: The Redis port (this will default to 6379).
     store_port: int
 
+    #: store_host: The email server host.
     store_host: str
 
+    #: The Redis store database name.
     db: int
 
+    #: The number of workers created to run tasks in the queue.
     workers: int
 
+    #: The email server host.
     host: str
 
-    pytask: PyTaskIO = None
-
-    queue: PyTaskIO
+    #: Accesses the `PyTaskIO <https://github.com/joegasewicz/pytask-io>`_ task queue library
+    queue: PyTaskIO = None
 
     email: Email
 
@@ -83,14 +82,14 @@ class PyMailIO:
         self.workers = kwargs.get("workers")
         self.host = kwargs.get("host")
         self.port = kwargs.get("port") or self._SMPT_SSL_PORT
-        self.pytask = PyTaskIO(
+        self.queue = PyTaskIO(
             store_port=6379,
             store_host="localhost",
             db=0,
             workers=3,
         )
         self.email = Email(
-            queue=self.pytask,
+            queue=self.queue,
             sender_email=self.sender_email,
             password=self.password,
             receiver_email=self.receiver_email,
@@ -100,6 +99,7 @@ class PyMailIO:
 
     def send_email_sync(self, email_msg: str):
         """
+        Sends a synchronous email.
         :param email_msg:
         :return:
         """
@@ -125,7 +125,7 @@ class PyMailIO:
         msg = self.format_msg(subject, body)
         self.send_email_sync(msg)
 
-    def send_email_on_queue(self, subject: str, body: str):
+    def add_email_to_queue(self, subject: str, body: str):
         """
         :param subject:
         :param body:
