@@ -13,7 +13,6 @@ pip install pymail-io
 #### Quick Start
 
 
-
 There are 3 ways to use PyMailIO:
 
 
@@ -37,7 +36,7 @@ email_meta = p.send_email(
 res = p.get_email_response(email_meta)
 ```
 
-###Coming soon:
+##### Coming soon:
 
 Running PyMailIO as an asyncio coroutine:
 
@@ -58,7 +57,7 @@ email_meta = await p.send_email(
 # Await a response from your sent email as a coroutine:
 res = await p.get_email_response(email_meta)
 ```
-###Coming soon:
+##### Coming soon:
 
 Running PyMailIO as a synchronous function (You will need to handle blocking & response):
 
