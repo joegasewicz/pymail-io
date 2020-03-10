@@ -24,7 +24,7 @@ from pymail_io.pymailio_task import PyMailIOTask
 
 p = PyMailIOTask(
     password="wizard",
-    receiver_email="joe@blogs.com",
+    receiver_email="joe@blogs.com", # Or a list of emails receiver_email=["joe@blogs.com", ...],
     sender_email="your_email@gmail.com",
     host="smtp.gmail.com",
 )
@@ -36,6 +36,8 @@ email_meta = p.send_email(
 # Get a response from your sent email:
 res = p.get_email_response(email_meta)
 ```
+
+###Coming soon:
 
 Running PyMailIO as an asyncio coroutine:
 
@@ -56,7 +58,7 @@ email_meta = await p.send_email(
 # Await a response from your sent email as a coroutine:
 res = await p.get_email_response(email_meta)
 ```
-
+###Coming soon:
 
 Running PyMailIO as a synchronous function (You will need to handle blocking & response):
 
