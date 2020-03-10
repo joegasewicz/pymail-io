@@ -30,8 +30,6 @@ class PyMailIO:
     workers: int
     host: str
     pytask: PyTaskIO = None
-    background_thread: threading.Thread
-    foreground_thread: threading.Thread
     queue: PyTaskIO
     email: Email
 
@@ -64,6 +62,10 @@ class PyMailIO:
         )
 
     def send_email_sync(self, email_msg: str):
+        """
+        :param email_msg:
+        :return:
+        """
         def inner():
             server = smtplib.SMTP_SSL(self.host, self._SMPT_SSL_PORT)
             try:
@@ -77,17 +79,19 @@ class PyMailIO:
             server.quit()
         return inner
 
-    def format_msg(self, subject: str, body: str) -> str:
-        formatted_text = f"""\
-                Subject: {subject}
-
-                {body}
-                """
-        return formatted_text
-
     def create_and_send_email(self, subject: str, body: str) -> Any:
+        """
+        :param subject:
+        :param body:
+        :return:
+        """
         msg = self.format_msg(subject, body)
         self.send_email_sync(msg)
 
     def send_email_on_queue(self, subject: str, body: str):
+        """
+        :param subject:
+        :param body:
+        :return:
+        """
         self.email.add_email_to_task_queue(unit_of_work_callable, [subject, body])

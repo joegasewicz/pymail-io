@@ -1,21 +1,32 @@
 import smtplib
 import ssl
-from typing import Dict, Any
+from typing import Dict, Any, Union, List
 from datetime import datetime
+from email.message import EmailMessage
 
 
-def format_msg(subject: str, body: str) -> str:
+def format_msg(
+        subject: str,
+        body: str,
+        sender_email: str,
+        receiver_email: Union[List[str], str],
+) -> EmailMessage:
     """
     :param subject:
     :param body:
+    :param sender_email:
+    :param receiver_email:
     :return:
     """
-    formatted_text = f"""\
-            Subject: {subject}
-
-            {body}
-            """
-    return formatted_text
+    message = EmailMessage()
+    message["Subject"] = subject
+    message["From"] = sender_email
+    if isinstance(receiver_email, list):
+        message["To"] = ", ".join(receiver_email)
+    else:
+        message["To"] = receiver_email
+    message.preamble = f"{body}"
+    return message
 
 
 def unit_of_work_callable(
@@ -28,21 +39,23 @@ def unit_of_work_callable(
         body: str,
 ) -> Dict[str, Any]:
     """
-    The unit of work must be outside any context
     :param sender_email:
     :param password:
     :param receiver_email:
+    :param host:
+    :param port:
     :param subject:
     :param body:
     :return:
     """
     time_sent = None
     _SSL_CONTEXT = ssl.create_default_context()
+    message = format_msg(subject, body, sender_email, receiver_email)
     with smtplib.SMTP_SSL(host, port, context=ssl.SSLContext()) as server:
         try:
             server.login(sender_email, password)
             time_sent = datetime.now()
-            server.sendmail(sender_email, receiver_email, format_msg(subject, body))
+            server.send_message(message)
         except smtplib.SMTPAuthenticationError as err:
             Warning(
                 "PyMailIO Error: Couldn't authenticate email senders credentials"
