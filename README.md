@@ -1,3 +1,5 @@
+![Read the Docs (version)](https://img.shields.io/readthedocs/pymail-io/latest)
+
 ![PyMailIO](assets/pymail_io.png)
 
  An Asynchronous mail server that's built on CPython's AsyncIO library.
