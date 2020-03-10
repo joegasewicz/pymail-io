@@ -1,4 +1,5 @@
 ![PyPI](https://img.shields.io/pypi/v/pymail-io)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pymail-io)
 ![Read the Docs (version)](https://img.shields.io/readthedocs/pymail-io/latest)
 
 ![PyMailIO](assets/pymail_io.png)
