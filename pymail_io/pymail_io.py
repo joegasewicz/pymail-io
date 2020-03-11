@@ -125,6 +125,14 @@ class PyMailIO:
         msg = self.format_msg(subject, body)
         self.send_email_sync(msg)
 
+    def send_email_sync(self, subject: str, body: str):
+        """
+        :param subject:
+        :param body:
+        :return:
+        """
+        return unit_of_work_callable(subject, body)
+
     def add_email_to_queue(self, subject: str, body: str):
         """
         :param subject:
