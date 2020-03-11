@@ -7,8 +7,7 @@ from typing import Dict, Any
 from pytask_io import PyTaskIO
 
 from pymail_io._email import Email
-from pymail_io._callables import unit_of_work_callable
-
+from pymail_io._callables import unit_of_work_callable, send_email_with_async
 
 class AbstractPyMailIO(ABC):
 
@@ -133,10 +132,18 @@ class PyMailIO:
         """
         return unit_of_work_callable(subject, body)
 
+    def send_email_async(self, subject: str, body: str):
+        """
+        :param subject:
+        :param body:
+        :return:
+        """
+        return self.email.send_async_email(send_email_with_async, [subject, body])
+
     def add_email_to_queue(self, subject: str, body: str):
         """
         :param subject:
         :param body:
         :return:
         """
-        self.email.add_email_to_task_queue(unit_of_work_callable, [subject, body])
+        return self.email.add_email_to_task_queue(unit_of_work_callable, [subject, body])
