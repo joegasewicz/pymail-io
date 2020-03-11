@@ -2,12 +2,12 @@
 PyMailIO is a low level class designed to be used be authors of libraries etc.
 """
 from abc import ABC, abstractmethod
-import smtplib
 from typing import Dict, Any, Awaitable
 from pytask_io import PyTaskIO
 
-from pymail_io._email import Email
-from pymail_io._callables import unit_of_work_callable, send_email_with_async
+
+from pymail_io.email import Email
+from pymail_io.callables import unit_of_work_callable, send_email_with_async
 
 
 class AbstractPyMailIO(ABC):
@@ -27,11 +27,11 @@ class PyMailIO:
     :key store_host: The email server host.
     :key db: The Redis store database name.
     :key workers: The number of workers created to run tasks in the queue.
-    :key host: The email server host.
-    :key port: The email server SSL or TLS port.
+    :key email_host: The email server host.
+    :key email_port: The email server SSL or TLS port.
     """
 
-    #: PyMailIO is a python library built on CPython's AsyncIO library.
+    #: PyMailIO iss a python library built on CPython's AsyncIO library.
     #: The entree to asyncio is via `PyTaskIO <https://github.com/joegasewicz/pytask-io>`_ which is
     #: an asynchronous task queue library that runs an event loop in a background thread.
     #:
@@ -49,27 +49,13 @@ class PyMailIO:
     #: The senders email address.
     sender_email: str
 
-    #: The Redis port (this will default to 6379).
-    store_port: int
-
-    #: store_host: The email server host.
-    store_host: str
-
-    #: The Redis store database name.
-    db: int
-
-    #: The number of workers created to run tasks in the queue.
-    workers: int
-
     #: The email server host.
-    host: str
+    email_host: str
+
+    email: Email
 
     #: Accesses the `PyTaskIO <https://github.com/joegasewicz/pytask-io>`_ task queue library
     queue: PyTaskIO = None
-
-    _use_queue: bool = False
-
-    email: Email
 
     _SMPT_SSL_PORT = 465
     _START_TLS_PORT = 587
@@ -82,25 +68,8 @@ class PyMailIO:
         self.store_host = kwargs.get("store_host")
         self.db = kwargs.get("db")
         self.workers = kwargs.get("workers")
-        self.host = kwargs.get("host")
-        self.port = kwargs.get("port") or self._SMPT_SSL_PORT
-
-        if self._use_queue:
-            self.queue = PyTaskIO(
-                store_port=6379,
-                store_host="localhost",
-                db=0,
-                workers=3,
-            )
-
-        self.email = Email(
-            queue=self.queue,
-            sender_email=self.sender_email,
-            password=self.password,
-            receiver_email=self.receiver_email,
-            host=self.host,
-            port=self.port,
-        )
+        self.email_host = kwargs.get("email_host")
+        self.email_port = kwargs.get("email_port") or self._SMPT_SSL_PORT
 
     def send_email_sync(self, subject: str, body: str):
         """

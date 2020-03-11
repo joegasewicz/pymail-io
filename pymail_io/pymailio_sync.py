@@ -1,5 +1,4 @@
-from typing import Dict, Any
-import asyncio
+from typing import Dict
 
 from pymail_io.pymail_io import AbstractPyMailIO, PyMailIO
 

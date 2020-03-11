@@ -29,15 +29,15 @@ class Email:
             sender_email: str,
             password: str,
             receiver_email: str,
-            host: str,
-            port: int,
+            email_host: str,
+            email_port: int,
     ):
         self.queue = queue
         self.sender_email = sender_email
         self.password = password
         self.receiver_email = receiver_email
-        self.host = host
-        self.port = port
+        self.email_host = email_host
+        self.email_port = email_port
 
     def add_email_to_task_queue(self, unit_of_work: Callable, email_data: Any, ) -> Dict[str, Any]:
         """
@@ -50,8 +50,8 @@ class Email:
             self.sender_email,
             self.password,
             self.receiver_email,
-            self.host,
-            self.port,
+            self.email_host,
+            self.email_port,
         )
 
         subject, body = email_data
