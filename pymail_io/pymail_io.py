@@ -96,41 +96,13 @@ class PyMailIO:
             port=self.port,
         )
 
-    def send_email_sync(self, email_msg: str):
-        """
-        Sends a synchronous email.
-        :param email_msg:
-        :return:
-        """
-        def inner():
-            server = smtplib.SMTP_SSL(self.host, self._SMPT_SSL_PORT)
-            try:
-                server.login(self.sender_email, self.password)
-                server.sendmail(self.sender_email, self.receiver_email, email_msg)
-            except smtplib.SMTPAuthenticationError as err:
-                Warning(
-                    "PyMailIO Error: Couldn't authenticate email senders credentials"
-                )
-
-            server.quit()
-        return inner
-
-    def create_and_send_email(self, subject: str, body: str) -> Any:
-        """
-        :param subject:
-        :param body:
-        :return:
-        """
-        msg = self.format_msg(subject, body)
-        self.send_email_sync(msg)
-
     def send_email_sync(self, subject: str, body: str):
         """
         :param subject:
         :param body:
         :return:
         """
-        return unit_of_work_callable(subject, body)
+        return self.email.send_sync_email(unit_of_work_callable, [subject, body])
 
     def send_email_async(self, subject: str, body: str):
         """
