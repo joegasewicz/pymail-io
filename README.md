@@ -28,7 +28,7 @@ p = PyMailIOTask(
     password="wizard",
     receiver_email="joe@blogs.com", # Or a list of emails receiver_email=["joe@blogs.com", ...],
     sender_email="your_email@gmail.com",
-    host="smtp.gmail.com",
+    email_host="smtp.gmail.com",
 )
 # Create your email subject & body
 email_meta = p.send_email(
@@ -50,7 +50,7 @@ p = PymailIOAsync(
     password="wizard",
     receiver_email="joe@blogs.com",
     sender_email="your_email@gmail.com",
-    host="smtp.gmail.com",
+    email_host="smtp.gmail.com",
 )
 # Create your email subject & body as a coroutine & await
 email_meta = await p.send_email(
@@ -71,7 +71,7 @@ p = PyMailIOSync(
     password="wizard",
     receiver_email="joe@blogs.com",
     sender_email="your_email@gmail.com",
-    host="smtp.gmail.com",
+    email_host="smtp.gmail.com",
 )
 # Create your email subject & body
 email_meta = p.send_email(

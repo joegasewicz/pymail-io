@@ -3,7 +3,7 @@ import smtplib
 
 from pymail_io.pymail_io import PyMailIO
 from pymail_io.pymailio_async import PymailIOAsync
-from tests.fixtures import mock_server
+from tests.fixtures import mock_server, pytask_io_fixture
 
 
 class TestPyMailIO:

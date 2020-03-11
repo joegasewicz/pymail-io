@@ -2,18 +2,23 @@ import pytest
 
 
 @pytest.fixture
-def redis_fixture():
-    class MockRedis:
-        pass
-    return MockRedis
-
-
-@pytest.fixture
 def pytask_io_fixture():
     class MockPyTaskIO:
-        pass
+        def __init__(self, *args, **kwargs):
+            pass
 
-    return MockPyTaskIO
+        def run(self):
+            pass
+
+        def stop(self):
+            pass
+
+        def add_task(self, callable_uow, subject, body):
+            return {
+
+            }
+
+    return MockPyTaskIO()
 
 
 @pytest.fixture

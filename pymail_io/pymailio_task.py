@@ -38,7 +38,7 @@ class PyMailIOTask(AbstractPyMailIO, PyMailIO):
     #:        password="wizard",
     #:        receiver_email="joe@blogs.com",  # Or a list of emails receiver_email=["joe@blogs.com", ...],
     #:        sender_email="your_email@gmail.com",
-    #:        host="smtp.gmail.com",
+    #:        email_host="smtp.gmail.com",
     #:    )
     #:
     #:    # Create your email subject & body

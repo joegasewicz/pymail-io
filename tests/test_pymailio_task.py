@@ -1,12 +1,14 @@
+from pytask_io import PyTaskIO
+
 from pymail_io.pymailio_task import PyMailIOTask
-from tests.fixtures import mock_server, redis_fixture, pytask_io_fixture
+from tests.fixtures import mock_server, pytask_io_fixture
 
 
 class TestPyMailIOTask:
 
-    def test_send_email(self, moneypatch, redis_fixture, pytask_io_fixture):
+    def test_send_email(self, moneypatch, pytask_io_fixture):
 
-        moneypatch.setattr()
+        moneypatch.setattr(PyTaskIO, pytask_io_fixture)
 
         p = PyMailIOTask(
             password="wizard",

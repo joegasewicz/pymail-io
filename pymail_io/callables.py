@@ -75,7 +75,7 @@ def unit_of_work_callable(
             "subject": subject,
             "body": body,
             "time_sent": time_sent,
-        }
+        },
     }
 
 
