@@ -3,7 +3,7 @@ Email class
 """
 import smtplib
 from pytask_io import PyTaskIO
-from typing import Dict, Any, Callable
+from typing import Dict, Any, Callable, Awaitable
 from functools import partial
 
 
@@ -58,7 +58,7 @@ class Email:
         meta_data = self.queue.add_task(callable_uow, subject, body)
         return meta_data
 
-    async def send_async_email(self, unit_of_work: Callable, email_data: Any) -> Dict[str, Any]:
+    async def send_async_email(self, unit_of_work: Callable, email_data: Any) -> Awaitable[Dict[str, Any]]:
         """
         :param unit_of_work:
         :param email_data:

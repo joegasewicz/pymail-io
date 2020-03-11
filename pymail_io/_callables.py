@@ -8,7 +8,7 @@ This is because within the task queue these functions get picked.
 """
 import smtplib
 import ssl
-from typing import Dict, Any, Union, List
+from typing import Dict, Any, Union, List, Awaitable
 from datetime import datetime
 from email.message import EmailMessage
 

@@ -3,7 +3,7 @@ PyMailIO is a low level class designed to be used be authors of libraries etc.
 """
 from abc import ABC, abstractmethod
 import smtplib
-from typing import Dict, Any
+from typing import Dict, Any, Awaitable
 from pytask_io import PyTaskIO
 
 from pymail_io._email import Email
@@ -110,13 +110,13 @@ class PyMailIO:
         """
         return self.email.send_sync_email(unit_of_work_callable, [subject, body])
 
-    def send_email_async(self, subject: str, body: str):
+    async def send_email_async(self, subject: str, body: str) -> Awaitable[Dict[str, Any]]:
         """
         :param subject:
         :param body:
         :return:
         """
-        return self.email.send_async_email(send_email_with_async, [subject, body])
+        return await self.email.send_async_email(send_email_with_async, [subject, body])
 
     def add_email_to_queue(self, subject: str, body: str):
         """
