@@ -43,7 +43,6 @@ class PyMailIOSync(AbstractPyMailIO, PyMailIO):
 
     def __init__(self, *args, **kwargs):
         super(PyMailIOSync, self).__init__(self, *args, **kwargs)
-        self.init()
 
     def send_email(self, *, subject, body) -> Dict[str, None]:
         """
@@ -52,7 +51,7 @@ class PyMailIOSync(AbstractPyMailIO, PyMailIO):
         :param body: The text body of the email
         :return: The response is a Dict with a `response` key
         """
-        res = self.create_and_send_email(subject, body)
+        res = self.send_email_sync(subject, body)
         return res
 
 
