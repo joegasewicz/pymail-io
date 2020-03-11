@@ -23,8 +23,6 @@ class PyMailIO:
     :key password: Your senders email password.
     :key receiver_email: This can be either a string or a list of email addresses.
     :key sender_email: The senders email address.
-    :key store_port: Redis store port (defaults to 6379).
-    :key store_host: The email server host.
     :key db: The Redis store database name.
     :key workers: The number of workers created to run tasks in the queue.
     :key email_host: The email server host.
@@ -64,8 +62,6 @@ class PyMailIO:
         self.password = kwargs.get("password")
         self.receiver_email = kwargs.get("receiver_email")
         self.sender_email = kwargs.get("sender_email")
-        self.store_port = kwargs.get("store_port")
-        self.store_host = kwargs.get("store_host")
         self.db = kwargs.get("db")
         self.workers = kwargs.get("workers")
         self.email_host = kwargs.get("email_host")

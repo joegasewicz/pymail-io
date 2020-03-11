@@ -18,7 +18,7 @@ def pytask_io_fixture():
 
             }
 
-    return MockPyTaskIO()
+    return MockPyTaskIO
 
 
 @pytest.fixture

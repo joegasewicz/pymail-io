@@ -69,15 +69,24 @@ class PyMailIOTask(AbstractPyMailIO, PyMailIO):
     #: The number of workers created to run tasks in the queue.
     workers: int
 
-    def __init__(self, *args, **kwargs):
+    def __init__(
+            self,
+            queue: PyTaskIO = PyTaskIO(),
+            email: Email = Email(),
+            *args,
+            **kwargs
+    ):
         super(PyMailIOTask, self).__init__(self, *args, **kwargs)
-        self.queue = PyTaskIO(
+        self.queue = queue
+        self.email = email
+
+        self.queue.init(
             store_port=6379,
             store_host="localhost",
             db=0,
             workers=3,
         )
-        self.email = Email(
+        self.email.init(
             queue=self.queue,
             sender_email=self.sender_email,
             password=self.password,
