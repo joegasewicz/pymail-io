@@ -79,7 +79,7 @@ def unit_of_work_callable(
     }
 
 
-def send_email_with_async(
+async def send_email_with_async(
         sender_email: str,
         password: str,
         receiver_email: str,
@@ -101,6 +101,7 @@ def send_email_with_async(
     time_sent = None
     _SSL_CONTEXT = ssl.create_default_context()
     message = format_msg(subject, body, sender_email, receiver_email)
+
     async with smtplib.SMTP_SSL(host, port, context=ssl.SSLContext()) as server:
         try:
             await server.login(sender_email, password)

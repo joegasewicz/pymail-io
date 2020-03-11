@@ -24,7 +24,11 @@ class PyMailIOTask(AbstractPyMailIO, PyMailIO):
     #: PyMailIO is a python library built on CPython's AsyncIO library.
     #: The entree to asyncio is via `PyTaskIO <https://github.com/joegasewicz/pytask-io>`_ which is
     #: an asynchronous task queue library that runs an event loop in a background thread.
-    #: Basic Usage. Example::
+    #: First, download and install & run the Redis image. Example::
+    #:
+    #:    docker run Redis
+    #:
+    #: Now, we are ready to use PyMailIO. Basic Usage. Example::
     #:
     #:    from pymail_io.pymailio_task import PyMailIOTask
     #:
@@ -50,6 +54,7 @@ class PyMailIOTask(AbstractPyMailIO, PyMailIO):
 
     def __init__(self, *args, **kwargs):
         super(PyMailIOTask, self).__init__(self, *args, **kwargs)
+        self._use_queue = True
 
     def send_email(self, *, subject, body) -> Any:
         """

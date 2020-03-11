@@ -9,6 +9,7 @@ from pytask_io import PyTaskIO
 from pymail_io._email import Email
 from pymail_io._callables import unit_of_work_callable, send_email_with_async
 
+
 class AbstractPyMailIO(ABC):
 
     @abstractmethod
@@ -66,6 +67,8 @@ class PyMailIO:
     #: Accesses the `PyTaskIO <https://github.com/joegasewicz/pytask-io>`_ task queue library
     queue: PyTaskIO = None
 
+    _use_queue: bool = False
+
     email: Email
 
     _SMPT_SSL_PORT = 465
@@ -81,12 +84,15 @@ class PyMailIO:
         self.workers = kwargs.get("workers")
         self.host = kwargs.get("host")
         self.port = kwargs.get("port") or self._SMPT_SSL_PORT
-        self.queue = PyTaskIO(
-            store_port=6379,
-            store_host="localhost",
-            db=0,
-            workers=3,
-        )
+
+        if self._use_queue:
+            self.queue = PyTaskIO(
+                store_port=6379,
+                store_host="localhost",
+                db=0,
+                workers=3,
+            )
+
         self.email = Email(
             queue=self.queue,
             sender_email=self.sender_email,
