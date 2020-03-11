@@ -10,7 +10,6 @@ class PyMailIOSync(AbstractPyMailIO, PyMailIO):
     :key password: Your senders email password.
     :key receiver_email: This can be either a string or a list of email addresses.
     :key sender_email: The senders email address.
-    :key workers: The number of workers created to run tasks in the queue.
     :key host: The email server host.
     :key port: The email server SSL or TLS port.
     """
