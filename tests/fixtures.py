@@ -1,10 +1,14 @@
 import pytest
 
+from tests.mock_data import payload_one
 
 @pytest.fixture
 def pytask_io_fixture():
     class MockPyTaskIO:
         def __init__(self, *args, **kwargs):
+            pass
+
+        def init(self, *args, **kwargs):
             pass
 
         def run(self):
@@ -14,11 +18,9 @@ def pytask_io_fixture():
             pass
 
         def add_task(self, callable_uow, subject, body):
-            return {
+            return payload_one
 
-            }
-
-    return MockPyTaskIO
+    return MockPyTaskIO()
 
 
 @pytest.fixture

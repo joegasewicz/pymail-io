@@ -4,6 +4,7 @@ without having to block waiting for a response.
 """
 from typing import Dict, Any
 from pytask_io import PyTaskIO
+from datetime import datetime
 
 from pymail_io.pymail_io import AbstractPyMailIO, PyMailIO
 from pymail_io.email import Email
@@ -71,6 +72,8 @@ class PyMailIOTask(AbstractPyMailIO, PyMailIO):
     #: The number of workers created to run tasks in the queue.
     workers: int
 
+    _email_results: Dict[str, Dict[str, Any]]
+
     def __init__(
             self,
             queue: PyTaskIO = PyTaskIO(),
@@ -111,16 +114,79 @@ class PyMailIOTask(AbstractPyMailIO, PyMailIO):
         :param body:
         :return:
         """
+        timestamp_now = datetime.now()
         self.queue.run()
         metadata = self.add_email_to_queue(subject, body)
         if not self.run_forever:
             self.queue.stop()
-        return metadata
+
+        data = {
+            "metadata": metadata,
+            "email": {
+                "subject": subject,
+                "body": body,
+                "email_init": timestamp_now,
+            }
+        }
+
+        self._email_results = data
+        return data
 
     def get_email_response(self, metadata):
         """
-        Gets the task result
+        To get the results of the email from the store, pass the metadata
+        to `get_email_response`.
+        For example::
+
+            result = p.send_email(
+                subject="The subject...",
+                body="The email body...",
+            )
+
+            email_meta = p.send_email(result["metadata"])
+
         :param metadata:
         :return:
         """
         return self.queue.get_task(metadata)
+
+    def datetime_exec(self) -> str:
+        """
+        There are 2 datetime values that reference when PyMailIO executed the `send_email`
+        method & also when the email was actually sent from the background queue:
+        The `datetime_exec` method will give you the datetime value that PyMailIO executed
+        the `send_email` method.
+        For example::
+
+            r = p.send_email(
+                subject="The subject...",
+                body="The email body...",
+            )
+
+            self.datetime_exec()
+
+        :return:
+        """
+        return self._email_results["email"]["email_init"]
+
+    def exec_time(self, data: Dict[str, Dict[str, Any]]) -> str:
+        """
+        :param data: The response Dict from the `send_email` method.
+        There are 2 datetime values that reference when PyMailIO executed the `send_email`
+        method & also when the email was actually sent from the background queue:
+        The `exec_time` method will give you the datetime value that PyMailIO's **queue** executed
+        the `send_email` method.
+        For example::
+
+            r = p.send_email(
+                subject="The subject...",
+                body="The email body...",
+            )
+
+            # Some time in the future...
+            r = get_email_response(r)
+            time_email_sent = self.exec_time(r)
+
+        :return:
+        """
+        return data["metadata"]["result_exec_date"]
