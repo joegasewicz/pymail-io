@@ -38,6 +38,23 @@ class Task(AbstractPyMailIO, PyMailIO):
 
         # Get a response from your sent email:
         res = p.get_email_response(email_meta)
+
+    To update the task queue & store settings, you can pass in extra values as kwargs to
+    the `Task` class. For example::
+
+       p = Task(
+           password="wizard",
+           receiver_email="joe@blogs.com",  # Or a list of emails receiver_email=["joe@blogs.com", ...],
+           sender_email="your_email@gmail.com",
+           email_host="smtp.gmail.com",
+
+           # extra settings:
+            store_port=6379,
+            store_host="localhost",
+            db=0,
+            workers=1,
+       )
+
     :kwargs:
     :key password: Your senders email password.
     :key receiver_email: This can be either a string or a list of email addresses.

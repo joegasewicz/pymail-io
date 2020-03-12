@@ -66,6 +66,25 @@ r = p.get_email_response(r)
 ```
 
 
+To update the task queue & store settings, you can pass in extra values as kwargs to
+the `Task` class. For example:
+
+```python
+
+p = Task(
+   password="wizard",
+   receiver_email="joe@blogs.com",  # Or a list of emails receiver_email=["joe@blogs.com", ...],
+   sender_email="your_email@gmail.com",
+   email_host="smtp.gmail.com",
+
+   # extra settings:
+    store_port=6379,
+    store_host="localhost",
+    db=0,
+    workers=1,
+)
+
+```
 ## Built With
 
 * [PyTaskIO](https://github.com/joegasewicz/pytask_io) - Asynchronous Tasks Library using asyncio
