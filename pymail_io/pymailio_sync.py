@@ -52,5 +52,3 @@ class PyMailIOSync(AbstractPyMailIO, PyMailIO):
         """
         res = self.send_email_sync(subject, body)
         return res
-
-

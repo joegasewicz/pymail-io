@@ -1,5 +1,6 @@
 import pytest
 import time
+import datetime
 
 from tests.mock_data import payload_one
 
@@ -24,7 +25,19 @@ def pytask_io_fixture():
 
         def get_task(self, metadata):
             if metadata["store_name"] == "uow_result_#13":
-                return {}
+                metadata["result_exec_date"] = datetime.datetime.now()
+                return {
+
+                    "metadata": {
+                        **payload_one,
+                        **metadata,
+                    },
+                        "email": {
+                        "subject": "",
+                        "body": "",
+                        "email_init": datetime.datetime,
+                    },
+                }
 
     return MockPyTaskIO()
 
