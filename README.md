@@ -58,10 +58,48 @@ The response from calling `p.send_email`:
 """
 ```
 
-Get a response from your sent email:
+To get the results of the email from the store, pass the metadata
+to `get_email_response`. For example:
 ```python
 # r is the return value from calling p.send_email (see above)
-r = p.get_email_response(r)
+r = p.send_email(
+    subject="The subject...",
+    body="The email body...",
+)
+
+email_meta = p.get_email_response(r)
+
+```
+There are 2 datetime values that reference when PyMailIO executed the `send_email`
+method & also when the email was actually sent from the background queue:
+The `datetime_exec` method will give you the datetime value that PyMailIO executed
+the `send_email` method.
+For example:
+```python
+r = p.send_email(
+    subject="The subject...",
+    body="The email body...",
+)
+
+self.datetime_exec()
+
+```
+
+There are 2 datetime values that reference when PyMailIO executed the `send_email`
+method & also when the email was actually sent from the background queue:
+The `exec_time` method will give you the datetime value that PyMailIO's **queue** executed
+the `send_email` method.
+For example:
+
+```python
+r = p.send_email(
+    subject="The subject...",
+    body="The email body...",
+)
+
+# Some time in the future...
+r = get_email_response(r)
+time_email_sent = self.exec_time(r)
 
 ```
 

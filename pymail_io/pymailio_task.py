@@ -163,7 +163,7 @@ class Task(AbstractPyMailIO, PyMailIO):
                 body="The email body...",
             )
 
-            email_meta = p.send_email(r)
+            email_meta = p.get_email_response(r)
 
         :param email_res:
         :return:
