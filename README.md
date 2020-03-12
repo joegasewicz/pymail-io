@@ -30,6 +30,10 @@ p = PyMailIOTask(
     sender_email="your_email@gmail.com",
     email_host="smtp.gmail.com",
 )
+# if you are running PyMailIO within the life time of a long running process, such as
+# a web framework of rest API, then set `run_for_ever=True` as this will yield much
+# better performances.
+
 # Create your email subject & body
 email_meta = p.send_email(
     subject="The subject...",
@@ -52,10 +56,6 @@ p = PymailIOAsync(
     sender_email="your_email@gmail.com",
     email_host="smtp.gmail.com",
 )
-
-# if you are running PyMailIO within the life time of a long running process, such as
-# a web framework of rest API, then set `run_for_ever=True` as this will yield much
-# better performances.
 
 # Create your email subject & body as a coroutine & await
 email_meta = await p.send_email(
