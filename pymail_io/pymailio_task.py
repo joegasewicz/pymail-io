@@ -84,16 +84,16 @@ class PyMailIOTask(AbstractPyMailIO, PyMailIO):
         super(PyMailIOTask, self).__init__(self, *args, **kwargs)
         self.queue = queue
         self.email = email
-        self.run_forever = kwargs.get("run_forever")
-        self.store_port = kwargs.get("store_port")
-        self.store_host = kwargs.get("store_host")
-        self.workers = kwargs.get("workers")
+        self.run_forever = kwargs.get("run_forever") or False
+        self.store_port = kwargs.get("store_port") or 6379
+        self.store_host = kwargs.get("store_host") or "localhost"
+        self.workers = kwargs.get("workers") or 3
 
         self.queue.init(
-            store_port=6379,
-            store_host="localhost",
-            db=0,
-            workers=3,
+            store_port=self.store_port,
+            store_host=self.store_host,
+            db=self.db,
+            workers=self.workers,
         )
         self.email.init(
             queue=self.queue,
