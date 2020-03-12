@@ -1,4 +1,5 @@
 import pytest
+import time
 
 from tests.mock_data import payload_one
 
@@ -18,9 +19,12 @@ def pytask_io_fixture():
             pass
 
         def add_task(self, callable_uow, subject, body):
-            return {
+            time.sleep(.1)
+            return payload_one
 
-            }
+        def get_task(self, metadata):
+            if metadata["store_name"] == "uow_result_#13":
+                return {}
 
     return MockPyTaskIO()
 
