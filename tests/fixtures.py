@@ -18,7 +18,9 @@ def pytask_io_fixture():
             pass
 
         def add_task(self, callable_uow, subject, body):
-            return payload_one
+            return {
+
+            }
 
     return MockPyTaskIO()
 

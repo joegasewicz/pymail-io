@@ -1,7 +1,6 @@
 """
 Email class
 """
-import smtplib
 from pytask_io import PyTaskIO
 from typing import Dict, Any, Callable, Awaitable
 from functools import partial
@@ -78,8 +77,8 @@ class Email:
             self.sender_email,
             self.password,
             self.receiver_email,
-            self.host,
-            self.port,
+            self.email_host,
+            self.email_port,
         )
         subject, body = email_data
         return send_email(subject, body)

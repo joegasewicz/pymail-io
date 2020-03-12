@@ -20,12 +20,16 @@ class TestPyMailIOTask:
 
         )
 
-        result = p.send_email(
+        subject = "test subject 1"
+        body = "test body 1"
+
+        r = p.send_email(
             subject="test subject 1",
             body="test body 1",
         )
 
-        assert result == payload_one
+        assert r["email"]["subject"] == subject
+        assert r["email"]["body"] == body
 
     def test_get_email_response(self):
         pass
