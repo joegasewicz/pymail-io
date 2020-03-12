@@ -12,6 +12,32 @@ from pymail_io.email import Email
 
 class PyMailIOTask(AbstractPyMailIO, PyMailIO):
     """
+    PyMailIO is a python library built on CPython's AsyncIO library.
+    The entree to asyncio is via `PyTaskIO <https://github.com/joegasewicz/pytask-io>`_ which is
+    an asynchronous task queue library that runs an event loop in a background thread.
+    First, download and install & run the Redis image. Example::
+
+       docker run Redis
+
+    Now, we are ready to use PyMailIO. Basic Usage. Example::
+
+       from pymail_io.pymailio_task import PyMailIOTask
+
+       p = PyMailIOTask(
+           password="wizard",
+           receiver_email="joe@blogs.com",  # Or a list of emails receiver_email=["joe@blogs.com", ...],
+           sender_email="your_email@gmail.com",
+           email_host="smtp.gmail.com",
+       )
+
+       # Create your email subject & body
+       email_meta = p.send_email(
+           subject="The subject...",
+           body="The email body...",
+       )
+
+        # Get a response from your sent email:
+        res = p.get_email_response(email_meta)
     :kwargs:
     :key password: Your senders email password.
     :key receiver_email: This can be either a string or a list of email addresses.
@@ -24,32 +50,6 @@ class PyMailIOTask(AbstractPyMailIO, PyMailIO):
     :key email_port: The email server SSL or TLS port.
     """
 
-    #: PyMailIO is a python library built on CPython's AsyncIO library.
-    #: The entree to asyncio is via `PyTaskIO <https://github.com/joegasewicz/pytask-io>`_ which is
-    #: an asynchronous task queue library that runs an event loop in a background thread.
-    #: First, download and install & run the Redis image. Example::
-    #:
-    #:    docker run Redis
-    #:
-    #: Now, we are ready to use PyMailIO. Basic Usage. Example::
-    #:
-    #:    from pymail_io.pymailio_task import PyMailIOTask
-    #:
-    #:    p = PyMailIOTask(
-    #:        password="wizard",
-    #:        receiver_email="joe@blogs.com",  # Or a list of emails receiver_email=["joe@blogs.com", ...],
-    #:        sender_email="your_email@gmail.com",
-    #:        email_host="smtp.gmail.com",
-    #:    )
-    #:
-    #:    # Create your email subject & body
-    #:    email_meta = p.send_email(
-    #:        subject="The subject...",
-    #:        body="The email body...",
-    #:    )
-    #:
-    #:     # Get a response from your sent email:
-    #:     res = p.get_email_response(email_meta)
 
     #: Set to False by default. If you want to keep the asyncio task queue running in the background thread
     #: then set this to true. Setting `run_forever` to True, will give much faster performances & is ideal
