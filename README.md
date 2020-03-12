@@ -1,6 +1,6 @@
 ![PyPI](https://img.shields.io/pypi/v/pymail-io)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pymail-io)
-![Read the Docs (version)](https://img.shields.io/readthedocs/pymail-io/latest)
+![Read the Docs (version)](https://img.shields.io/readthedocs/pymail-io/en/latest)
 
 ![PyMailIO](assets/pymail_io.png)
 
@@ -11,15 +11,15 @@ Read the docs: [Documentation](https://pymail-io.readthedocs.io/en/latest/)
 
 ```bash
 pip install pymail-io
+
+# Install & run Redis
+docker run redis
 ```
 
 #### Quick Start
 
 
-There are 3 ways to use PyMailIO:
-
-
-Running PyMailIO as a complete emailing solution:
+Run PyMailIO as a complete emailing solution:
 
 ```python
 from pymail_io.pymailio_task import Task
