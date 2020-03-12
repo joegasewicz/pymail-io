@@ -58,11 +58,10 @@ The response from calling `p.send_email`:
 """
 ```
 
+Get a response from your sent email:
 ```python
-
-# Get a response from your sent email:
+# r is the return value from calling p.send_email (see above)
 r = p.get_email_response(r)
-
 
 ```
 

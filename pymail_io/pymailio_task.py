@@ -135,23 +135,29 @@ class Task(AbstractPyMailIO, PyMailIO):
         self._email_results = data
         return data
 
-    def get_email_response(self, metadata):
+    def get_email_response(self, email_res: Dict[str, Dict[str, Any]]) -> Any:
         """
         To get the results of the email from the store, pass the metadata
         to `get_email_response`.
         For example::
 
-            result = p.send_email(
+            r = p.send_email(
                 subject="The subject...",
                 body="The email body...",
             )
 
-            email_meta = p.send_email(result["metadata"])
+            email_meta = p.send_email(r)
 
-        :param metadata:
+        :param email_res:
         :return:
         """
-        return self.queue.get_task(metadata)
+        if "metadata" not in email_res:
+            raise ValueError(
+                "PyTaskIO Error: Could not reference metadata key in email_res arg "
+                "Please visit: https://pymail-io.readthedocs.io/en/latest/pymailio_task.html "
+                "for more info."
+            )
+        return self.queue.get_task(email_res["metadata"])
 
     def datetime_exec(self) -> str:
         """
