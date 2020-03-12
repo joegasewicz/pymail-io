@@ -31,7 +31,7 @@ p = PyMailIOTask(
     email_host="smtp.gmail.com",
 )
 # if you are running PyMailIO within the life time of a long running process, such as
-# a web framework of rest API, then set `run_for_ever=True` as this will yield much
+# a web framework of rest API, then set `run_forever=True` as this will yield much
 # better performances.
 
 # Create your email subject & body
