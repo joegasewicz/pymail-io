@@ -50,7 +50,7 @@ class PyMailIOTask(AbstractPyMailIO, PyMailIO):
     #:
     #:     # Get a response from your sent email:
     #:     res = p.get_email_response(email_meta)
-    #:
+
     #: Set to False by default. If you want to keep the asyncio task queue running in the background thread
     #: then set this to true. Setting `run_forever` to True, will give much faster performances & is ideal
     #: when you can run the event loop thread against a long running process, such as the life time process
