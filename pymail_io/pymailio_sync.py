@@ -18,9 +18,9 @@ class PyMailIOSync(AbstractPyMailIO, PyMailIO):
     #: an asynchronous task queue library that runs an event loop in a background thread.
     #: Basic Usage. Example::
     #:
-    #:    from pymail_io.pymailio_task import PyMailIOTask
+    #:    from pymail_io.pymailio_task import Task
     #:
-    #:    p = PyMailIOTask(
+    #:    p = Task(
     #:        password="wizard",
     #:        receiver_email="joe@blogs.com",  # Or a list of emails receiver_email=["joe@blogs.com", ...],
     #:        sender_email="your_email@gmail.com",

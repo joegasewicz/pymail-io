@@ -10,7 +10,7 @@ from pymail_io.pymail_io import AbstractPyMailIO, PyMailIO
 from pymail_io.email import Email
 
 
-class PyMailIOTask(AbstractPyMailIO, PyMailIO):
+class Task(AbstractPyMailIO, PyMailIO):
     """
     PyMailIO is a python library built on CPython's AsyncIO library.
     The entree to asyncio is via `PyTaskIO <https://github.com/joegasewicz/pytask-io>`_ which is
@@ -21,9 +21,9 @@ class PyMailIOTask(AbstractPyMailIO, PyMailIO):
 
     Now, we are ready to use PyMailIO. Basic Usage. Example::
 
-       from pymail_io.pymailio_task import PyMailIOTask
+       from pymail_io.pymailio_task import Task
 
-       p = PyMailIOTask(
+       p = Task(
            password="wizard",
            receiver_email="joe@blogs.com",  # Or a list of emails receiver_email=["joe@blogs.com", ...],
            sender_email="your_email@gmail.com",
@@ -81,7 +81,7 @@ class PyMailIOTask(AbstractPyMailIO, PyMailIO):
             *args,
             **kwargs
     ):
-        super(PyMailIOTask, self).__init__(self, *args, **kwargs)
+        super(Task, self).__init__(self, *args, **kwargs)
         self.queue = queue
         self.email = email
         self.run_forever = kwargs.get("run_forever") or False
