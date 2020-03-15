@@ -2,7 +2,7 @@
 Main Public API for sending emails by adding it to the asyncio task queue
 without having to block waiting for a response.
 """
-from typing import Dict, Any
+from typing import Dict, Any, Union, List
 from pytask_io import PyTaskIO
 from datetime import datetime
 
@@ -25,7 +25,6 @@ class Task(AbstractPyMailIO, PyMailIO):
 
        p = Task(
            password="wizard",
-           receiver_email="joe@blogs.com",  # Or a list of emails receiver_email=["joe@blogs.com", ...],
            sender_email="your_email@gmail.com",
            email_host="smtp.gmail.com",
        )
@@ -34,6 +33,7 @@ class Task(AbstractPyMailIO, PyMailIO):
        email_meta = p.send_email(
            subject="The subject...",
            body="The email body...",
+           receiver_email="joe@blogs.com",  # Or a list of emails receiver_email=["joe@blogs.com", ...],
        )
 
         # Get a response from your sent email:
@@ -44,7 +44,6 @@ class Task(AbstractPyMailIO, PyMailIO):
 
        p = Task(
            password="wizard",
-           receiver_email="joe@blogs.com",  # Or a list of emails receiver_email=["joe@blogs.com", ...],
            sender_email="your_email@gmail.com",
            email_host="smtp.gmail.com",
 
@@ -121,7 +120,7 @@ class Task(AbstractPyMailIO, PyMailIO):
             email_port=self.email_port,
         )
 
-    def send_email(self, *, subject, body) -> Any:
+    def send_email(self, *, subject: str, body: str, receiver_email: Union[str, List[str]]) -> Any:
         """
         Example::
 
@@ -132,11 +131,12 @@ class Task(AbstractPyMailIO, PyMailIO):
 
         :param subject:
         :param body:
+        :param receiver_email: Example: "joe@blogs.com",  # Or a list of emails receiver_email=["joe@blogs.com", ...],
         :return:
         """
         timestamp_now = datetime.now()
         self.queue.run()
-        metadata = self.add_email_to_queue(subject, body)
+        metadata = self.add_email_to_queue(subject, body, receiver_email)
         if not self.run_forever:
             self.queue.stop()
 
@@ -145,6 +145,7 @@ class Task(AbstractPyMailIO, PyMailIO):
             "email": {
                 "subject": subject,
                 "body": body,
+                "receiver_email": receiver_email,
                 "email_init": timestamp_now,
             }
         }

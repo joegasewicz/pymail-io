@@ -2,7 +2,7 @@
 Email class
 """
 from pytask_io import PyTaskIO
-from typing import Dict, Any, Callable, Awaitable
+from typing import Dict, Any, Callable, Awaitable, Union, List
 from functools import partial
 
 
@@ -30,17 +30,22 @@ class Email:
         self.email_host = kwargs.get("email_host")
         self.email_port = kwargs.get("email_port")
 
-    def add_email_to_task_queue(self, unit_of_work: Callable, email_data: Any, ) -> Dict[str, Any]:
+    def add_email_to_task_queue(
+            self,
+            receiver_email: Union[str, List[str]],
+            unit_of_work: Callable, email_data: Any
+    ) -> Dict[str, Any]:
         """
-        :param email_data:
+        :param receiver_email:
         :param unit_of_work:
+        :param email_data:
         :return:
         """
         callable_uow = partial(
             unit_of_work,
             self.sender_email,
             self.password,
-            self.receiver_email,
+            receiver_email,
             self.email_host,
             self.email_port,
         )
@@ -49,8 +54,14 @@ class Email:
         meta_data = self.queue.add_task(callable_uow, subject, body)
         return meta_data
 
-    async def send_async_email(self, unit_of_work: Callable, email_data: Any) -> Awaitable[Dict[str, Any]]:
+    async def send_async_email(
+            self,
+            receiver_email: Union[str, List[str]],
+            unit_of_work: Callable,
+            email_data: Any
+    ) -> Awaitable[Dict[str, Any]]:
         """
+        :param receiver_email:
         :param unit_of_work:
         :param email_data:
         :return:
@@ -59,15 +70,21 @@ class Email:
             unit_of_work,
             self.sender_email,
             self.password,
-            self.receiver_email,
+            receiver_email,
             self.email_host,
             self.email_port,
         )
         subject, body = email_data
         return await send_email(subject, body)
 
-    def send_sync_email(self, unit_of_work: Callable, email_data: Any) -> Dict[str, Any]:
+    def send_sync_email(
+            self,
+            receiver_email: Union[str, List[str]],
+            unit_of_work: Callable,
+            email_data: Any,
+    ) -> Dict[str, Any]:
         """
+        :param receiver_email:
         :param unit_of_work:
         :param email_data:
         :return:
@@ -76,7 +93,7 @@ class Email:
             unit_of_work,
             self.sender_email,
             self.password,
-            self.receiver_email,
+            receiver_email,
             self.email_host,
             self.email_port,
         )
