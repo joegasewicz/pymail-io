@@ -45,7 +45,7 @@ class TestTask:
         r = p.send_email(
             subject="test subject 1",
             body="test body 1",
-            receiver_email="joe@blogs.com",  # Or a list of emails receiver_email=["joe@blogs.com", ...],
+            receiver_email="joe@blogs.com",
         )
 
         r = p.get_email_response(r)
@@ -65,7 +65,7 @@ class TestTask:
         r = p.send_email(
             subject="test subject 1",
             body="test body 1",
-            receiver_email="joe@blogs.com",  # Or a list of emails receiver_email=["joe@blogs.com", ...],
+            receiver_email="joe@blogs.com",
         )
 
         timestamp = p.datetime_exec()
@@ -85,7 +85,7 @@ class TestTask:
         r = p.send_email(
             subject="test subject 1",
             body="test body 1",
-            receiver_email="joe@blogs.com",  # Or a list of emails receiver_email=["joe@blogs.com", ...],
+            receiver_email="joe@blogs.com",
         )
 
         r = p.get_email_response(r)
