@@ -13,7 +13,6 @@ class TestTask:
         p = Task(
             pytask_io_fixture,
             password="wizard",
-            receiver_email="joe@blogs.com",  # Or a list of emails receiver_email=["joe@blogs.com", ...],
             sender_email="your_email@gmail.com",
             host="smtp.gmail.com",
 
@@ -25,6 +24,7 @@ class TestTask:
         r = p.send_email(
             subject="test subject 1",
             body="test body 1",
+            receiver_email="joe@blogs.com",  # Or a list of emails receiver_email=["joe@blogs.com", ...],
         )
 
         assert r["email"]["subject"] == subject
@@ -37,7 +37,6 @@ class TestTask:
         p = Task(
             pytask_io_fixture,
             password="wizard",
-            receiver_email="joe@blogs.com",  # Or a list of emails receiver_email=["joe@blogs.com", ...],
             sender_email="your_email@gmail.com",
             host="smtp.gmail.com",
 
@@ -46,6 +45,7 @@ class TestTask:
         r = p.send_email(
             subject="test subject 1",
             body="test body 1",
+            receiver_email="joe@blogs.com",
         )
 
         r = p.get_email_response(r)
@@ -57,7 +57,6 @@ class TestTask:
         p = Task(
             pytask_io_fixture,
             password="wizard",
-            receiver_email="joe@blogs.com",  # Or a list of emails receiver_email=["joe@blogs.com", ...],
             sender_email="your_email@gmail.com",
             host="smtp.gmail.com",
 
@@ -66,6 +65,7 @@ class TestTask:
         r = p.send_email(
             subject="test subject 1",
             body="test body 1",
+            receiver_email="joe@blogs.com",
         )
 
         timestamp = p.datetime_exec()
@@ -77,7 +77,6 @@ class TestTask:
         p = Task(
             pytask_io_fixture,
             password="wizard",
-            receiver_email="joe@blogs.com",  # Or a list of emails receiver_email=["joe@blogs.com", ...],
             sender_email="your_email@gmail.com",
             host="smtp.gmail.com",
 
@@ -86,6 +85,7 @@ class TestTask:
         r = p.send_email(
             subject="test subject 1",
             body="test body 1",
+            receiver_email="joe@blogs.com",
         )
 
         r = p.get_email_response(r)
