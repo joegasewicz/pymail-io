@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="pymail-io",
-    version="0.0.2",
+    version="0.0.4",
     description="An asynchronous mail server",
     packages=['pymail_io'],
     install_requires=[
