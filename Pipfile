@@ -9,7 +9,7 @@ pytest = "*"
 [packages]
 dill = "==0.3.1.1"
 pytask-io = "==0.0.4"
-redis = "==3.4.1"
+redis = "==4.4.4"
 
 [requires]
 python_version = "3.7"
